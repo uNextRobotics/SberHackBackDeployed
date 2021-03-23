@@ -16,6 +16,7 @@ import sqlalchemy.dialects.postgresql
 
 load_dotenv(find_dotenv())
 #import environ
+#
 DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASE_URL = DATABASE_URL.replace("postgres", "postgresql")
 
