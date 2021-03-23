@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 import os
 
 #DATABASE_URL = "postgresql://mikhail:1234@localhost/bodroe_ytro"
-DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = os.environ['DATABASE_URL']
 database = databases.Database(DATABASE_URL)
 
 metadata = sqlalchemy.MetaData()
