@@ -1,5 +1,7 @@
 import databases
 import sqlalchemy
+from sqlalchemy import create_engine
+import urllib.parse
 import uuid
 import datetime
 from datetime import timedelta
@@ -7,15 +9,17 @@ from fastapi import FastAPI
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import sessionmaker
-import os
 from dotenv import load_dotenv, find_dotenv
 import os
+import sqlalchemy.dialects.postgresql
+
+import psycopg2
 
 load_dotenv(find_dotenv())
 #import environ
-
-#DATABASE_URL = "postgresql://mikhail:1234@localhost/bodroe_ytro"
 DATABASE_URL = os.environ.get('DATABASE_URL')
+DATABASE_URL = DATABASE_URL.replace("postgres", "postgresql")
+
 database = databases.Database(DATABASE_URL)
 
 metadata = sqlalchemy.MetaData()
@@ -81,7 +85,7 @@ progress = sqlalchemy.Table(
 )
 
 
-engine = sqlalchemy.create_engine(
+engine = create_engine(
     DATABASE_URL
 )
 metadata.create_all(engine)
