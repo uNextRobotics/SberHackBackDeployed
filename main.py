@@ -133,85 +133,88 @@ async def shutdown():
     await database.disconnect()
 
 
-@app.post("/User/")
-async def createUser(user_: User):
-    query = user.insert().values(
-        user_token=user_.UserId,
-        name=user_.Name,
-        age=user_.Age,
-        gender=user_.Gender
-    )
-    await database.execute(query)
-    return {
-        "id": user_.UserId,
-        **user_.dict(),
-        "status": "1"
-    }
+# @app.post("/User/")
+# async def createUser(user_: User):
+#     query = user.insert().values(
+#         user_token=user_.UserId,
+#         name=user_.Name,
+#         age=user_.Age,
+#         gender=user_.Gender
+#     )
+#     await database.execute(query)
+#     return {
+#         "id": user_.UserId,
+#         **user_.dict(),
+#         "status": "1"
+#     }
 
 
-@app.post("/ProgressAchieve/")
-async def createProgressAchieve(achiv: Progres):
-    query = progress.insert().values(
-        user_toket=achiv.UserId,
-        date=datetime.date.today(),
-        completed=True
-    )
-    await database.execute(query)
-    return {
-        **achiv.dict(),
-        "status": "1"
-    }
+# @app.post("/ProgressAchieve/")
+# async def createProgressAchieve(achiv: Progres):
+#     query = progress.insert().values(
+#         user_toket=achiv.UserId,
+#         date=datetime.date.today(),
+#         completed=True
+#     )
+#     await database.execute(query)
+#     return {
+#         **achiv.dict(),
+#         "status": "1"
+#     }
 
 
 @app.get("/AllGroupsExercises/")
 async def getAllGroupsExercises():
+    await database.connect()
     query = training_group.select()
-    return await database.fetch_all(query)
+    a = await database.fetch_all(query)
+    await database.disconnect()
+    return a
 
 
-@app.get("/ExircicesfromGroup/")
-async def getExircicesfromGroup(group_id: int):
-    query = engine.execute(training_training_group.select().where(
-        training_training_group.c.training_group_Id == group_id)).fetchall()
-    print(query[:][1])
-    res = []
-    for i in query:
-        res.append(engine.execute(training.select().where(
-            training.c.Id == i[1])).fetchone())
-    # res = training.select().where(training.c.Id == query[0][1])
-    return res
+# @app.get("/ExircicesfromGroup/")
+# async def getExircicesfromGroup(group_id: int):
+#     query = engine.execute(training_training_group.select().where(
+#         training_training_group.c.training_group_Id == group_id)).fetchall()
+#     print(query[:][1])
+#     res = []
+#     for i in query:
+#         res.append(engine.execute(training.select().where(
+#             training.c.Id == i[1])).fetchone())
+#     # res = training.select().where(training.c.Id == query[0][1])
+#     return res
 
 
-@app.get("/ProgressByUser/")
-async def getProgressByUser(user_id: str):
-    query = progress.select().where(progress.c.user_toket == user_id)
-    return await database.fetch_all(query)
+# @app.get("/ProgressByUser/")
+# async def getProgressByUser(user_id: str):
+#     query = progress.select().where(progress.c.user_toket == user_id)
+#     return await database.fetch_all(query)
 
 
-@app.get("/AchiviesFomUser/")
-async def getAchiviesForUser(user_id: str):
-    count = 1
-    days = 0
-    date = datetime.date.today()
-    while(count != 0):
-        query = engine.execute(progress.select().where(
-            progress.c.date == date and progress.c.user_toket == user_id))
-        print("date", date)
-        cnt = len(query.fetchall())
-        if(cnt > 0):
-            days += 1
-        count = cnt
-        date -= timedelta(days=1)
-    print(query)
+# @app.get("/AchiviesFomUser/")
+# async def getAchiviesForUser(user_id: str):
+#     count = 1
+#     days = 0
+#     date = datetime.date.today()
+#     while(count != 0):
+#         query = engine.execute(progress.select().where(
+#             progress.c.date == date and progress.c.user_toket == user_id))
+#         print("date", date)
+#         cnt = len(query.fetchall())
+#         if(cnt > 0):
+#             days += 1
+#         count = cnt
+#         date -= timedelta(days=1)
+#     print(query)
 
-    count_train = len(engine.execute(progress.select().where(
-        progress.c.user_toket == user_id)).fetchall())
+#     count_train = len(engine.execute(progress.select().where(
+#         progress.c.user_toket == user_id)).fetchall())
 
-    count_days_train = session.query(progress.c.date, sqlalchemy.func.count(
-        progress.c.date)).where(progress.c.user_toket == user_id).group_by(progress.c.date).all()
+#     count_days_train = session.query(progress.c.date, sqlalchemy.func.count(
+#         progress.c.date)).where(progress.c.user_toket == user_id).group_by(progress.c.date).all()
 
-    res = dict()
-    res['dict'] = days
-    res['count_train'] = count_train
-    res['count_days_train'] = len(count_days_train)
-    return res
+#     res = dict()
+#     res['dict'] = days
+#     res['count_train'] = count_train
+#     res['count_days_train'] = len(count_days_train)
+#     return res
