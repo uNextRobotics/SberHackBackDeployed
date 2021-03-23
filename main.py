@@ -13,7 +13,6 @@ from dotenv import load_dotenv, find_dotenv
 import os
 import sqlalchemy.dialects.postgresql
 
-import psycopg2
 
 load_dotenv(find_dotenv())
 #import environ
