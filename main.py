@@ -19,7 +19,7 @@ load_dotenv(find_dotenv())
 DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASE_URL = DATABASE_URL.replace("postgres", "postgresql")
 
-database = databases.Database(DATABASE_URL, ssl=True)
+database = databases.Database(DATABASE_URL)
 
 metadata = sqlalchemy.MetaData()
 
