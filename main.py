@@ -19,7 +19,7 @@ load_dotenv(find_dotenv())
 DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASE_URL = DATABASE_URL.replace("postgres", "postgresql")
 
-database = databases.Database(DATABASE_URL)
+database = databases.Database(DATABASE_URL, ssl=True)
 
 metadata = sqlalchemy.MetaData()
 
@@ -125,6 +125,11 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await database.connect()
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
 
 @app.post("/User/")
