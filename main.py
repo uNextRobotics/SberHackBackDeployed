@@ -19,7 +19,7 @@ load_dotenv(find_dotenv())
 DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASE_URL = DATABASE_URL.replace("postgres", "postgresql")
 
-database = databases.Database(DATABASE_URL, max_size=19)
+database = databases.Database(DATABASE_URL, max_size=20)
 
 metadata = sqlalchemy.MetaData()
 
@@ -85,7 +85,7 @@ progress = sqlalchemy.Table(
 
 
 engine = create_engine(
-    DATABASE_URL
+    DATABASE_URL, pool_size=20, max_overflow=0
 )
 metadata.create_all(engine)
 
