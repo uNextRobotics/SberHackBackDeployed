@@ -90,6 +90,7 @@ engine = create_engine(
 metadata.create_all(engine)
 
 Session = sessionmaker(engine)
+session = Session()
 
 
 class User(BaseModel):
@@ -132,7 +133,7 @@ async def shutdown():
 
 @app.post("/User/")
 async def createUser(user_: User):
-    session = Session()
+
     query = user.insert().values(
         user_token=user_.UserId,
         name=user_.Name,
@@ -140,7 +141,6 @@ async def createUser(user_: User):
         gender=user_.Gender
     )
     await database.execute(query)
-    session.close()
     return {
         "id": user_.UserId,
         **user_.dict(),
@@ -150,14 +150,12 @@ async def createUser(user_: User):
 
 @app.post("/ProgressAchieve/")
 async def createProgressAchieve(achiv: Progres):
-    session = Session()
     query = progress.insert().values(
         user_toket=achiv.UserId,
         date=datetime.date.today(),
         completed=True
     )
     await database.execute(query)
-    session.close()
     return {
         **achiv.dict(),
         "status": "1"
@@ -166,15 +164,12 @@ async def createProgressAchieve(achiv: Progres):
 
 @app.get("/AllGroupsExercises/")
 async def getAllGroupsExercises():
-    session = Session()
     query = training_group.select()
-    session.close()
     return await database.fetch_all(query)
 
 
 @app.get("/ExircicesfromGroup/")
 async def getExircicesfromGroup(group_id: int):
-    session = Session()
     query = session.execute(training_training_group.select().where(
         training_training_group.c.training_group_Id == group_id)).fetchall()
     print(query[:][1])
@@ -183,21 +178,17 @@ async def getExircicesfromGroup(group_id: int):
         res.append(session.execute(training.select().where(
             training.c.Id == i[1])).fetchone())
     # res = training.select().where(training.c.Id == query[0][1])
-    session.close()
     return res
 
 
 @app.get("/ProgressByUser/")
 async def getProgressByUser(user_id: str):
-    session = Session()
     query = progress.select().where(progress.c.user_toket == user_id)
-    session.close()
     return await database.fetch_all(query)
 
 
 @app.get("/AchiviesFomUser/")
 async def getAchiviesForUser(user_id: str):
-    session = Session()
     count = 1
     days = 0
     date = datetime.date.today()
@@ -222,5 +213,4 @@ async def getAchiviesForUser(user_id: str):
     res['dict'] = days
     res['count_train'] = count_train
     res['count_days_train'] = len(count_days_train)
-    session.close()
     return res
