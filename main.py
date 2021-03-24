@@ -132,7 +132,6 @@ async def shutdown():
 
 @app.post("/User/")
 async def createUser(user_: User):
-    session = Session()
     query = user.insert().values(
         user_token=user_.UserId,
         name=user_.Name,
@@ -140,7 +139,6 @@ async def createUser(user_: User):
         gender=user_.Gender
     )
     database.execute(query)
-    session.close()
     return {
         "id": user_.UserId,
         **user_.dict(),
@@ -150,14 +148,12 @@ async def createUser(user_: User):
 
 @app.post("/ProgressAchieve/")
 async def createProgressAchieve(achiv: Progres):
-    session = Session()
     query = progress.insert().values(
         user_toket=achiv.UserId,
         date=datetime.date.today(),
         completed=True
     )
     database.execute(query)
-    session.close()
     return {
         **achiv.dict(),
         "status": "1"
