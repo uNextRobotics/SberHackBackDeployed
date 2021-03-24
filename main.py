@@ -153,7 +153,7 @@ async def createProgressAchieve(achiv: Progres):
         date=datetime.date.today(),
         completed=True
     )
-    database.execute(query)
+    await database.execute(query)
     return {
         **achiv.dict(),
         "status": "1"
