@@ -1,1 +1,1 @@
-web: gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app
+web: bin/start-pgbouncer-stunnel gunicorn -w 3 -k uvicorn.workers.UvicornWorker main:app
