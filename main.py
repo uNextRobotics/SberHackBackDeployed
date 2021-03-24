@@ -2,7 +2,10 @@ import databases
 import sqlalchemy
 from sqlalchemy import create_engine
 import urllib.parse
+from fastapi.encoders import jsonable_encoder
+
 import uuid
+from fastapi.responses import JSONResponse
 import datetime
 from datetime import timedelta
 from fastapi import FastAPI
@@ -120,14 +123,14 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
 
 @app.exception_handler(500)
 async def custom_http_exception_handler(request, exc):
-    error = ErrorResponse(error="Something went wrong")
+    #error = ErrorResponse(error="Something went wrong")
     error = jsonable_encoder(error.dict())
 
     response = JSONResponse(content=error, status_code=500)
@@ -147,7 +150,7 @@ async def custom_http_exception_handler(request, exc):
         # all the config, then update our response headers
         cors = CORSMiddleware(
             app=app,
-            allow_origins=ALLOWED_ORIGINS,
+            allow_origins=["*"],
             allow_credentials=True,
             allow_methods=["*"],
             allow_headers=["*"])
