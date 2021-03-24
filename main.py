@@ -138,7 +138,7 @@ async def createUser(user_: User):
         age=user_.Age,
         gender=user_.Gender
     )
-    database.execute(query)
+    await database.execute(query)
     return {
         "id": user_.UserId,
         **user_.dict(),
