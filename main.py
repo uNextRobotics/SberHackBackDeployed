@@ -184,6 +184,11 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
+@app.post("/")
+async def hello():
+    return "hello"
+
+
 
 @app.post("/User/")
 async def createUser(user_: User):
