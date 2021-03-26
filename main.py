@@ -16,7 +16,6 @@ from dotenv import load_dotenv, find_dotenv
 import os
 import sqlalchemy.dialects.postgresql
 
-
 ###
 load_dotenv(find_dotenv())
 #import environ
