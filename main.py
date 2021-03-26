@@ -111,7 +111,6 @@ class Progres(BaseModel):
 class Categoriya(BaseModel):
     Name: str
 
-
 app = FastAPI()
 
 origins = [
