@@ -15,11 +15,11 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv, find_dotenv
 import os
 import sqlalchemy.dialects.postgresql
-import pymongo
 
 
-client = pymongo.MongoClient("mongodb+srv://dbMike:pMQI7fDiPLbTyNVg@cluster0.1il65.mongodb.net/myFirstDatabase?retryWrites=true&w=majority") 
-db = client.SberHackBack
+
+# client = pymongo.MongoClient("mongodb+srv://dbMike:pMQI7fDiPLbTyNVg@cluster0.1il65.mongodb.net/myFirstDatabase?retryWrites=true&w=majority") 
+# db = client.SberHackBack
 ###
 load_dotenv(find_dotenv())
 #import environ
