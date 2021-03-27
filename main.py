@@ -15,7 +15,11 @@ from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv, find_dotenv
 import os
 import sqlalchemy.dialects.postgresql
+import pymongo
 
+
+client = pymongo.MongoClient("mongodb+srv://dbMike:pMQI7fDiPLbTyNVg@cluster0.1il65.mongodb.net/myFirstDatabase?retryWrites=true&w=majority") 
+db = client.SberHackBack
 ###
 load_dotenv(find_dotenv())
 #import environ
@@ -120,58 +124,58 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
 
-@app.exception_handler(500)
-async def custom_http_exception_handler(request, exc):
-    #error = ErrorResponse(error="Something went wrong")
-    error = jsonable_encoder(error.dict())
+# @app.exception_handler(500)
+# async def custom_http_exception_handler(request, exc):
+#     #error = ErrorResponse(error="Something went wrong")
+#     error = jsonable_encoder(error.dict())
 
-    response = JSONResponse(content=error, status_code=500)
+#     response = JSONResponse(content=error, status_code=500)
 
-    # Since the CORSMiddleware is not executed when an unhandled server exception
-    # occurs, we need to manually set the CORS headers ourselves if we want the FE
-    # to receive a proper JSON 500, opposed to a CORS error.
-    # Setting CORS headers on server errors is a bit of a philosophical topic of
-    # discussion in many frameworks, and it is currently not handled in FastAPI.
-    # See dotnet core for a recent discussion, where ultimately it was
-    # decided to return CORS headers on server failures:
-    # https://github.com/dotnet/aspnetcore/issues/2378
-    origin = request.headers.get('origin')
+#     # Since the CORSMiddleware is not executed when an unhandled server exception
+#     # occurs, we need to manually set the CORS headers ourselves if we want the FE
+#     # to receive a proper JSON 500, opposed to a CORS error.
+#     # Setting CORS headers on server errors is a bit of a philosophical topic of
+#     # discussion in many frameworks, and it is currently not handled in FastAPI.
+#     # See dotnet core for a recent discussion, where ultimately it was
+#     # decided to return CORS headers on server failures:
+#     # https://github.com/dotnet/aspnetcore/issues/2378
+#     origin = request.headers.get('origin')
 
-    if origin:
-        # Have the middleware do the heavy lifting for us to parse
-        # all the config, then update our response headers
-        cors = CORSMiddleware(
-            app=app,
-            allow_origins=["*"],
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"])
+#     if origin:
+#         # Have the middleware do the heavy lifting for us to parse
+#         # all the config, then update our response headers
+#         cors = CORSMiddleware(
+#             app=app,
+#             allow_origins=["*"],
+#             allow_credentials=True,
+#             allow_methods=["*"],
+#             allow_headers=["*"])
 
-        # Logic directly from Starlette's CORSMiddleware:
-        # https://github.com/encode/starlette/blob/master/starlette/middleware/cors.py#L152
+#         # Logic directly from Starlette's CORSMiddleware:
+#         # https://github.com/encode/starlette/blob/master/starlette/middleware/cors.py#L152
 
-        response.headers.update(cors.simple_headers)
-        has_cookie = "cookie" in request.headers
+#         response.headers.update(cors.simple_headers)
+#         has_cookie = "cookie" in request.headers
 
-        # If request includes any cookie headers, then we must respond
-        # with the specific origin instead of '*'.
-        if cors.allow_all_origins and has_cookie:
-            response.headers["Access-Control-Allow-Origin"] = origin
+#         # If request includes any cookie headers, then we must respond
+#         # with the specific origin instead of '*'.
+#         if cors.allow_all_origins and has_cookie:
+#             response.headers["Access-Control-Allow-Origin"] = origin
 
-        # If we only allow specific origins, then we have to mirror back
-        # the Origin header in the response.
-        elif not cors.allow_all_origins and cors.is_allowed_origin(origin=origin):
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers.add_vary_header("Origin")
+#         # If we only allow specific origins, then we have to mirror back
+#         # the Origin header in the response.
+#         elif not cors.allow_all_origins and cors.is_allowed_origin(origin=origin):
+#             response.headers["Access-Control-Allow-Origin"] = origin
+#             response.headers.add_vary_header("Origin")
 
-    return response
+#     return response
 
 
 @app.on_event("startup")
@@ -183,8 +187,41 @@ async def startup():
 async def shutdown():
     await database.disconnect()
 
-@app.post("/")
+@app.get("/")
 async def hello():
+    # cursor = db.user 
+    # for document in cursor.find(): 
+    #    try:
+    #         query = user.insert().values(
+    #         user_token=document["UserId"],
+    #         name="string",
+    #         age=0,
+    #         gender="0"
+    #         )
+    #         await database.execute(query)
+    #    except:
+    #        continue
+    # cursor = db.progress # choosing the collection you need 
+    # for document in cursor.find(): 
+    #     try:
+    #         query = progress.insert().values(
+    #         user_toket=document["UserId"],
+    #         date=datetime.datetime.strptime(document["date"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+    #         completed=True
+    #         )
+    #         await database.execute(query)
+    #     except:
+    #         print('fff')
+    #     try:
+    #         query = progress.insert().values(
+    #         user_toket=document["UserId"],
+    #         date=datetime.datetime.strptime(document["date"], "%Y-%m-%d"),
+    #         completed=True
+    #         )
+    #         await database.execute(query)
+    #     except:
+    #         continue
+        
     return "hello"
 
 
