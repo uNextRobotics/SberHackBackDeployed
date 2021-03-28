@@ -208,8 +208,9 @@ async def hello():
     #         date=datetime.datetime.strptime(document["date"], "%Y-%m-%dT%H:%M:%S.%fZ"),
     #         completed=True
     #         )
-    
+
     #         await database.execute(query)
+    
     #     except:
     #         print('fff')
     #     try:
