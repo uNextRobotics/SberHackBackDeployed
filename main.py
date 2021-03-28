@@ -3,7 +3,6 @@ import sqlalchemy
 from sqlalchemy import create_engine
 import urllib.parse
 from fastapi.encoders import jsonable_encoder
-
 import uuid
 from fastapi.responses import JSONResponse
 import datetime
