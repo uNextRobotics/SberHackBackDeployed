@@ -280,7 +280,6 @@ async def getProgressByUser(user_id: str):
     query = progress.select().where(progress.c.user_toket == user_id)
     return await database.fetch_all(query)
 
-
 @app.get("/AchiviesFomUser/")
 async def getAchiviesForUser(user_id: str):
     session = Session()
